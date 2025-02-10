@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Aptos Transaction Parser
+
+An elegant and intuitive tool for parsing and understanding Aptos blockchain transactions with AI-powered explanations.
+
+![Aptos Transaction Parser Screenshot](./public/screenshot.png)
+
+## Features
+
+- 🎯 **Dual Input Methods**
+  - Parse transactions using raw JSON
+  - Quick lookup using transaction hash
+- 🤖 **AI-Powered Explanations**
+  - Clear, concise transaction summaries
+  - Human-readable format
+- 🎨 **Modern UI/UX**
+  - Clean and intuitive interface
+  - Responsive design
+  - Dark mode support
+- 🔗 **Seamless Integration**
+  - Direct links to Aptos Explorer
+  - Copy-paste friendly JSON viewer
+
+## Tech Stack
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- OpenAI API
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18.0 or later
+- yarn or npm
+- OpenAI API key
+
+### Installation
+
+1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/pumpkinzomb/aptos-tx-parser.git
+cd aptos-tx-parser
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
+```bash
+yarn install
+# or
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit `.env.local` and add your configuration:
+```
+ELYN_API_KEY=your_api_key_here
+ELYN_API_ENDPOINT=your_api_endpoint_here
+```
 
-## Learn More
+4. Start the development server
+```bash
+yarn dev
+# or
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Visit `http://localhost:3000` to see the application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Choose your input method:
+   - **JSON Input**: Paste raw transaction JSON
+   - **Hash Input**: Enter transaction hash
 
-## Deploy on Vercel
+2. Click "Parse Transaction" to analyze
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. View the:
+   - Formatted transaction data
+   - AI-generated explanation
+   - Direct link to Aptos Explorer
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built by [zombcat](https://github.com/pumpkinzomb)
+- Powered by OpenAI
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Built for the Aptos community
+
+## Contact
+
+zombcat - [@zombcat](https://twitter.com/zombcat)
+
+Project Link: [https://github.com/pumpkinzomb/aptos-tx-parser](https://github.com/pumpkinzomb/aptos-tx-parser)
