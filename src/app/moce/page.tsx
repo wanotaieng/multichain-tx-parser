@@ -30,13 +30,6 @@ interface Transaction {
   [key: string]: any;
 }
 
-interface ApiResponse {
-  transaction?: Transaction;
-  explanation: string;
-  chain?: string;
-  error?: string;
-}
-
 export default function MOCEParser() {
   const [inputType, setInputType] = useState<"json" | "hash">("json");
   const [input, setInput] = useState<string>("");
@@ -53,7 +46,6 @@ export default function MOCEParser() {
 
     try {
       let response: Response;
-      let data: ApiResponse;
 
       const judgeResponse = await fetch("/api/chain-judge", {
         method: "POST",
@@ -91,7 +83,7 @@ export default function MOCEParser() {
         );
       }
 
-      data = await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to parse transaction");

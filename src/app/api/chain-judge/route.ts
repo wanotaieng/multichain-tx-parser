@@ -51,7 +51,7 @@ async function verifyAptosTransaction(hash: string): Promise<boolean> {
       `${CHAIN_ENDPOINTS.aptos}/transactions/by_hash/${hash}`
     );
     return response.ok;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -77,7 +77,7 @@ async function verifyRippleTransaction(hash: string): Promise<boolean> {
     if (!response.ok) return false;
     const data = await response.json();
     return !data.error;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -98,7 +98,7 @@ async function verifyPolkadotTransaction(hash: string): Promise<boolean> {
     if (!response.ok) return false;
     const data = await response.json();
     return data.code === 0; // Subscan API returns code 0 for success
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let possibleChains: string[] = [];
+    const possibleChains: string[] = [];
 
     if (type === "hash") {
       // First check hash patterns
@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
       let jsonData;
       try {
         jsonData = typeof input === "string" ? JSON.parse(input) : input;
-      } catch (e) {
+      } catch {
         return NextResponse.json(
           { error: "Invalid JSON format" },
           { status: 400 }
