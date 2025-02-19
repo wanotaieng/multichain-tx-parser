@@ -16,7 +16,9 @@ import {
   FileJson,
   Hash,
   Code2,
+  FileText,
 } from "lucide-react";
+import DiagramPreview from "../components/DiagramPreview";
 
 const EXPLORER_URLS = {
   aptos: "https://explorer.aptoslabs.com/txn",
@@ -36,13 +38,40 @@ export default function MOCEParser() {
   const [parsedTransaction, setParsedTransaction] =
     useState<Transaction | null>(null);
   const [explanation, setExplanation] = useState<string>("");
+  const [diagramDefinition, setDiagramDefinition] = useState<string>("");
   const [detectedChain, setDetectedChain] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
+  const fetchDiagram = async (chain: string, txData: any) => {
+    try {
+      const response = await fetch(`/api/tx-diagram/${chain}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          transaction: txData,
+          type: inputType,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate diagram");
+      }
+
+      const data = await response.json();
+      return data.diagram;
+    } catch (error) {
+      console.error("Error fetching diagram:", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     setError("");
+    setDiagramDefinition("");
 
     try {
       let response: Response;
@@ -66,6 +95,7 @@ export default function MOCEParser() {
 
       setDetectedChain(judgeData.chain);
 
+      let transactionData;
       if (inputType === "json") {
         const parsedJson = JSON.parse(input);
         setParsedTransaction(parsedJson);
@@ -90,9 +120,15 @@ export default function MOCEParser() {
       }
 
       if (data.transaction) {
+        transactionData = data.transaction;
         setParsedTransaction(data.transaction);
       }
       setExplanation(data.explanation);
+
+      const diagram = await fetchDiagram(judgeData.chain, transactionData);
+      if (diagram) {
+        setDiagramDefinition(diagram);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       setParsedTransaction(null);
@@ -107,6 +143,7 @@ export default function MOCEParser() {
     setError("");
     setInput("");
     setDetectedChain("");
+    setDiagramDefinition("");
   };
 
   const getExplorerUrl = (chain: string, transaction: Transaction): string => {
@@ -292,14 +329,24 @@ export default function MOCEParser() {
           <div className="h-full">
             <Card className="h-full flex flex-col rounded-xl border-gray-200 shadow-xl shadow-gray-200/50 backdrop-blur-sm bg-white/80">
               <CardHeader className="bg-gradient-to-br from-gray-50 to-white border-b border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  Analysis
-                </h2>
+                <div className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-gray-700" />
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Analysis
+                  </h2>
+                </div>
               </CardHeader>
               <CardContent className="flex-1 min-h-0 overflow-auto">
                 <div className="space-y-6">
                   {explanation ? (
                     <>
+                      {diagramDefinition && (
+                        <div className="mb-6">
+                          <DiagramPreview
+                            diagramDefinition={diagramDefinition}
+                          />
+                        </div>
+                      )}
                       <div className="whitespace-pre-wrap text-gray-700">
                         {explanation}
                       </div>
