@@ -40,33 +40,35 @@ async function analyzeTransaction(transaction: any): Promise<string> {
     messages: [
       {
         role: "system",
-        content: `You are an Aptos blockchain transaction analyzer. Your role is to provide clear, single-line summaries of transactions in this format:
+        content: `You are an Aptos blockchain transaction analyzer. Provide a brief 4-5 line analysis covering:
 
-[Type] | [From] → [To] | [Action] ([Amount] if applicable)
+1. Module Information
+   - Which Move module and function was called
+   - Main purpose of the transaction
+   - Success/failure status
 
-Rules:
-- Always use a single line
-- Use '|' to separate sections and '→' for direction
-- Be extremely concise
-- Include amount only if it's a transfer
-- Remove technical jargon
-- Focus on the main action
+2. Resource Changes
+   - Which resources were modified
+   - What changed in account states
+   - Any token or NFT transfers
 
-Examples:
-"Transfer | alice.apt → bob.apt | Sent 100 APT"
-"NFT | creator.apt → buyer.apt | Minted Bored Ape #123"
-"Stake | validator.apt → pool.apt | Delegated 5000 APT"`,
+3. Impact Summary
+   - Who initiated and who was affected
+   - Final outcome and implications
+   - Gas usage and version
+
+Use clear, concise language and focus on the most important aspects of the Move transaction. For common patterns like token transfers, DeFi operations, or NFT trades, include relevant amounts and participants.`,
       },
       {
         role: "user",
-        content: `Analyze and provide a one-line summary: ${JSON.stringify(
+        content: `Analyze this Aptos transaction in detail: ${JSON.stringify(
           transaction
         )}`,
       },
     ],
     temperature: 0.3,
-    max_tokens: 100,
-    presence_penalty: -0.1,
+    max_tokens: 200,
+    presence_penalty: 0.1,
   });
 
   if (!completion.choices[0]?.message?.content) {
@@ -89,7 +91,6 @@ export async function GET(request: Request) {
     }
 
     const transaction = await fetchAptosTransaction(hash);
-
     const explanation = await analyzeTransaction(transaction);
 
     const response: ApiResponse = {

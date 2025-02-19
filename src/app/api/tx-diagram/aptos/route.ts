@@ -13,76 +13,71 @@ const openai = new OpenAI({
   baseURL: process.env.ELYN_API_ENDPOINT,
 });
 
-const RIPPLE_NODE_URL = "https://xrplcluster.com";
+const APTOS_NODE_URL = "https://fullnode.mainnet.aptoslabs.com/v1";
 
 interface ApiResponse {
-  transaction?: any;
-  explanation: string;
+  diagram: string;
   error?: string;
 }
 
-async function fetchRippleTransaction(hash: string) {
-  const response = await fetch(`${RIPPLE_NODE_URL}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      method: "tx",
-      params: [
-        {
-          transaction: hash,
-          binary: false,
-        },
-      ],
-    }),
-  });
+async function fetchAptosTransaction(hash: string) {
+  const response = await fetch(
+    `${APTOS_NODE_URL}/transactions/by_hash/${hash}`
+  );
 
   if (!response.ok) {
     const error = await response.text();
     throw new Error(`Failed to fetch transaction: ${response.status} ${error}`);
   }
 
-  const data = await response.json();
-  if (data.error) {
-    throw new Error(`Failed to fetch transaction: ${data.error}`);
-  }
-
-  return data.result;
+  return response.json();
 }
 
-async function analyzeTransaction(transaction: any): Promise<string> {
+async function generateDiagram(transaction: any): Promise<string> {
   const completion = await openai.chat.completions.create({
-    model: "elyn/2.0-flash",
+    model: "elyn/4o-mini",
     messages: [
       {
         role: "system",
-        content: `You are an XRP Ledger transaction analyzer. Provide a brief 4-5 line analysis covering:
+        content: `You are an expert in creating Mermaid sequence diagrams for Aptos blockchain transactions. Generate clear and accurate sequence diagrams showing the transaction flow, focusing on:
 
-1. Transaction Type and Purpose
-   - Identify the main operation (Payment, TrustSet, OfferCreate, etc.)
-   - Explain what the transaction is trying to achieve
+1. Key participants and their interactions:
+   - Sender/User
+   - Target contract or module
+   - Resources affected
+   - Other relevant participants
 
-2. Involved Parties and Values
-   - Who initiated and who received
-   - What values were transferred (XRP, IOUs, or other assets)
-   - Any important flags or settings changed
+2. Transaction details:
+   - Function calls with parameters
+   - Token transfers with amounts
+   - State changes in resources
+   - Events emitted
 
-3. Transaction Outcome
-   - Success or failure status
-   - Final impact on accounts or ledger state
+3. Technical specifications:
+   - Use proper Mermaid sequence diagram syntax
+   - Include activate/deactivate for complex operations
+   - Group related operations in rect blocks
+   - Keep diagram flowing left to right
+   - Limit to 4-5 main participants for clarity
 
-Use clear, concise language and focus on the most important aspects of the transaction.`,
+Output just the Mermaid diagram code without any additional text or explanation.`,
       },
       {
         role: "user",
-        content: `Analyze this XRP Ledger transaction in detail: ${JSON.stringify(
+        content: `Create a Mermaid sequence diagram for this Aptos transaction: ${JSON.stringify(
           transaction
-        )}`,
+        )}
+
+Example format:
+sequenceDiagram
+    participant User
+    participant Contract
+    participant Resource
+    ...rest of the diagram`,
       },
     ],
-    temperature: 0.3,
-    max_tokens: 200,
+    temperature: 0.1,
+    max_tokens: 1000,
     presence_penalty: 0.1,
   });
 
@@ -90,7 +85,13 @@ Use clear, concise language and focus on the most important aspects of the trans
     throw new Error("Invalid response from AI model");
   }
 
-  return completion.choices[0].message.content.trim();
+  const diagramCode = completion.choices[0].message.content.trim();
+
+  // Clean up the response to ensure it's valid Mermaid syntax
+  return diagramCode
+    .replace(/^```mermaid\n?/, "")
+    .replace(/```$/, "")
+    .trim();
 }
 
 export async function GET(request: Request) {
@@ -105,22 +106,21 @@ export async function GET(request: Request) {
       );
     }
 
-    const transaction = await fetchRippleTransaction(hash);
-    const explanation = await analyzeTransaction(transaction);
+    const transaction = await fetchAptosTransaction(hash);
+    const diagram = await generateDiagram(transaction);
 
     const response: ApiResponse = {
-      transaction,
-      explanation,
+      diagram,
     };
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Error processing transaction:", error);
+    console.error("Error generating diagram:", error);
 
     const errorMessage =
       error instanceof Error
         ? error.message
-        : "An unexpected error occurred while fetching the transaction";
+        : "An unexpected error occurred while processing the transaction";
 
     return NextResponse.json(
       { error: errorMessage },
@@ -147,20 +147,20 @@ export async function POST(req: Request) {
       );
     }
 
-    const explanation = await analyzeTransaction(transaction);
+    const diagram = await generateDiagram(transaction);
 
     const response: ApiResponse = {
-      explanation,
+      diagram,
     };
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Error processing transaction:", error);
+    console.error("Error generating diagram:", error);
 
     const errorMessage =
       error instanceof Error
         ? error.message
-        : "An unexpected error occurred while parsing the transaction";
+        : "An unexpected error occurred while generating the diagram";
 
     return NextResponse.json(
       { error: errorMessage },
