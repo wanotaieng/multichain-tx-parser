@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types */
+
 import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
 import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
@@ -5,8 +7,7 @@ import { MerkleClient, MerkleClientConfig } from "@merkletrade/ts-sdk";
 import { HfInference } from "@huggingface/inference";
 import { QdrantClient } from "@qdrant/js-client-rest";
 import fetch from "node-fetch";
-import DKG from 'dkg.js'
-
+import DKG from "dkg.js";
 
 const {
   DKG_NODE_HOSTNAME = "http://localhost",
@@ -16,7 +17,6 @@ const {
   DKG_PUBLIC_KEY = "",
   DKG_PRIVATE_KEY = ""
 } = process.env;
-
 
 const requiredEnvVars = [
   "ELYN_API_KEY",
@@ -44,7 +44,7 @@ const qdrant = new QdrantClient({
 });
 
 const dkgClient = new DKG({
-  environment: DKG_ENVIRONMENT, 
+  environment: DKG_ENVIRONMENT,
   endpoint: DKG_NODE_HOSTNAME,
   port: Number(DKG_NODE_PORT),
   blockchain: {
@@ -70,7 +70,7 @@ interface ApiResponse {
   finalTx?: any;
   orderPayload?: any;
   signedTx?: any;
-  dkgAssetUAL?: string;
+  dkgAssetUAL?: string; // The universal asset locator for a DKG knowledge asset
 }
 
 async function classifyChain(rawTx: any): Promise<string> {
@@ -95,17 +95,16 @@ async function classifyChain(rawTx: any): Promise<string> {
 }
 
 async function fetchAptosTransaction(hash: string) {
-    const config = new AptosConfig({ network: Network.MAINNET });
-    const aptos = new Aptos(config);
-  
-    try {
-      // Fetch the transaction details by hash
-      const transaction = await aptos.getTransactionByHash({ transactionHash: hash });
-      return transaction;
-    } catch (error) {
-      console.error("Error fetching transaction:", error);
-      throw error;
-    }
+  const config = new AptosConfig({ network: Network.MAINNET });
+  const aptos = new Aptos(config);
+
+  try {
+    const transaction = await aptos.getTransactionByHash({ transactionHash: hash });
+    return transaction;
+  } catch (error) {
+    console.error("Error fetching transaction:", error);
+    throw error;
+  }
 }
 
 async function retrieveDocs(query: string): Promise<string> {
@@ -117,7 +116,7 @@ async function retrieveDocs(query: string): Promise<string> {
     vector: embeddings[0],
     top: 2
   });
-  return docs.map((d) => d.payload?.text ?? "").join("\n");
+  return docs.map((d: { payload: { text: any; }; }) => d.payload?.text ?? "").join("\n");
 }
 
 async function buildMermaidDiagram(tx: any): Promise<string> {
@@ -139,6 +138,7 @@ async function buildMermaidDiagram(tx: any): Promise<string> {
 async function analyzeTxWithContext(tx: any, docs: string, userId: string): Promise<string> {
   const chain = await classifyChain(tx);
   const mermaid = await buildMermaidDiagram(tx);
+
   const c = await openai.chat.completions.create({
     model: "elyn/2.0-flash",
     messages: [
@@ -146,10 +146,10 @@ async function analyzeTxWithContext(tx: any, docs: string, userId: string): Prom
         role: "system",
         content: [
           "You are an AI specialized in analyzing transactions across multiple blockchains, especially Aptos.",
-          "You know about the Decentralized Knowledge Graph (DKG) from OriginTrail, plus Merkle Trade on Aptos.",
-          "Here are relevant docs from Qdrant for context:",
+          "You also leverage the OriginTrail Decentralized Knowledge Graph (DKG) to store and retrieve data about these transactions.",
+          "Below are some relevant docs from Qdrant:",
           docs,
-          "Please produce a summary, followed by a mermaid diagram."
+          "Produce a thorough explanation and then append a mermaid diagram for clarity."
         ].join("\n")
       },
       {
@@ -164,6 +164,7 @@ async function analyzeTxWithContext(tx: any, docs: string, userId: string): Prom
     temperature: 0.4,
     max_tokens: 400
   });
+
   const answer = c.choices[0]?.message?.content || "";
   return `${answer}\n\nMermaid:\n${mermaid}`;
 }
@@ -175,8 +176,8 @@ async function storeAnalysisInDKG(
   userId: string
 ): Promise<string | null> {
   try {
-    // Format the public content to store. 
-    // You can also add private data if you want it hidden to other nodes.
+    // We store the analysis as public data for demonstration.
+    // Private data is also possible if you prefer to keep it local on your node.
     const content = {
       public: {
         "@context": "http://schema.org",
@@ -188,7 +189,13 @@ async function storeAnalysisInDKG(
         rawTransaction: txData
       }
     };
+
+    /* 
+      epochsNum = 3 means the data is kept for 3 months on the DKG
+      This can be adjusted. 
+    */
     const result = await dkgClient.asset.create(content, { epochsNum: 3 });
+    // Returns a "UAL" (universal asset locator), e.g. did:dkg:base:84532/0xabcd1234...
     return result.UAL;
   } catch (err) {
     console.error("DKG store error:", err);
@@ -204,8 +211,6 @@ async function routeAndAnalyze(
   const docText = await retrieveDocs(`transaction on chain: ${chain}`);
   const explanation = await analyzeTxWithContext(tx, await docText, userId);
 
-  // Attempt to store in DKG for future reference
-  // This is optional, but part of the hackathon challenge to show DKG usage
   const ual = await storeAnalysisInDKG(tx, chain, explanation, userId);
   return { explanation, chain, dkgAssetUAL: ual || undefined };
 }
@@ -215,13 +220,16 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const hash = searchParams.get("hash");
     const userId = searchParams.get("userId") || "anonymous_user";
+
     if (!hash) {
       return NextResponse.json({ error: "Transaction hash is required" }, { status: 400 });
     }
+
     const txData = await fetchAptosTransaction(hash);
     if (!txData) {
       return NextResponse.json({ error: "Transaction not found" }, { status: 404 });
     }
+
     const { explanation, chain, dkgAssetUAL } = await routeAndAnalyze(txData, userId);
     return NextResponse.json({
       transaction: txData,
@@ -238,6 +246,8 @@ export async function GET(request: Request) {
 export async function POST(req: Request) {
   try {
     const body: TxRequestBody = await req.json();
+
+    // 1) Analyze a transaction object
     if (body.transaction) {
       const { explanation, chain, dkgAssetUAL } = await routeAndAnalyze(
         body.transaction,
@@ -246,7 +256,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ explanation, chain, dkgAssetUAL });
     }
 
-    // If there's no raw transaction but user wants to place a Merkle order:
+    // 2) If user wants to place a Merkle order on Aptos
     if (!body.userAddress || !body.privateKey) {
       return NextResponse.json(
         { error: "userAddress and privateKey required for Merkle trade submission" },
@@ -254,31 +264,35 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1) Place a Merkle order on Aptos
+    // (A) Build & place the order
     const merkle = new MerkleClient(await MerkleClientConfig.mainnet());
     const aptosSdk = new Aptos(merkle.config.aptosConfig);
+
     const orderPayload = await merkle.payloads.placeMarketOrder({
       pair: "BTC_USD",
       userAddress: body.userAddress,
-      sizeDelta: 100000000n,  // e.g. 100 USDC
-      collateralDelta: 5000000n,  // e.g. 5 USDC
+      sizeDelta: BigInt(100000000),
+      collateralDelta: BigInt(5000000),
       isLong: true,
       isIncrease: true
     });
+
     const builtTx = await aptosSdk.transaction.build.simple({
       sender: body.userAddress,
       data: orderPayload
     });
+
     const submitted = await aptosSdk.signAndSubmitTransaction({
       signer: { type: "raw", privateKey: body.privateKey },
       transaction: builtTx
     });
+
     const finalTx = await aptosSdk.waitForTransaction({ transactionHash: submitted.hash });
 
-    // 2) Retrieve final on-chain transaction data
+    // (B) Retrieve final on-chain data
     const onChainData = await fetchAptosTransaction(submitted.hash);
 
-    // 3) Analyze and store in DKG
+    // (C) Analyze + store in DKG
     const { explanation, chain, dkgAssetUAL } = await routeAndAnalyze(
       onChainData,
       body.userId || "anonymous"
@@ -299,19 +313,19 @@ export async function POST(req: Request) {
 }
 
 export const txAnalyzerPlugin = {
-    name: "txAnalyzerPlugin",
-    commands: [
-      {
-        name: "analyzeAptosTx",
-        description: "Analyze an Aptos transaction, store result in the DKG, returns a summary + UAL",
-        exec: async (runtime, params) => {
-          const { hash, userId } = params;
-          if (!hash) return "No hash provided";
-          const txData = await fetchAptosTransaction(hash);
-          if (!txData) return "Transaction not found";
-          const { explanation, chain, dkgAssetUAL } = await routeAndAnalyze(txData, userId);
-          return `Chain: ${chain}\nUAL: ${dkgAssetUAL}\nExplanation:\n${explanation}`;
-        }
+  name: "txAnalyzerPlugin",
+  commands: [
+    {
+      name: "analyzeAptosTx",
+      description: "Analyze an Aptos transaction, store result in the DKG, returns a summary + UAL",
+      exec: async (runtime: any, params: { hash: string; userId?: string }) => {
+        const { hash, userId = "anonymous_user" } = params;
+        if (!hash) return "No hash provided";
+        const txData = await fetchAptosTransaction(hash);
+        if (!txData) return "Transaction not found";
+        const { explanation, chain, dkgAssetUAL } = await routeAndAnalyze(txData, userId);
+        return `Chain: ${chain}\nUAL: ${dkgAssetUAL}\nExplanation:\n${explanation}`;
       }
-    ]
-  };
+    }
+  ]
+};
