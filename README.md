@@ -11,8 +11,6 @@ In the rapidly evolving blockchain landscape, each network (Aptos, Ripple, Polka
 **Solution: Mixture of Multichain Experts (MoME)**  
 MoME is a cross-chain AI platform that automatically detects which blockchain(s) a transaction belongs to, fetches relevant data from a vector database (Qdrant), then hands the transaction to a specialized “Expert” for that chain. Finally, an SLM (GPT-4o-mini) produces a **plain-English** summary and optional **Mermaid** diagram. By combining a **Routing Network** (ModernBERT) with **chain-specific Experts** and user feedback loops, MoME offers accurate, human-readable transaction explanations with minimal manual intervention.
 
----
-
 ## **Technical Description**
 
 1. **Routing Network**  
@@ -36,8 +34,6 @@ MoME is a cross-chain AI platform that automatically detects which blockchain(s)
    - **Ripple**: XRPL parsing (potentially RLUSD-based stablecoin or bridging logic).  
    - **Polkadot**: polkadot.js-based extrinsic decoding, especially for DeFi or asset hub use cases.
 
----
-
 ## **Roadmap**
 
 ### **Done**  
@@ -53,8 +49,6 @@ MoME is a cross-chain AI platform that automatically detects which blockchain(s)
 - **Advanced Mermaid Output**: Generate richer diagrams, covering multi-step contract calls or cross-chain bridging flows.  
 - **Scalability Upgrades**: Optimize vector database queries and expert models to handle higher transaction volumes in real-time.
 
----
-
 ## **Slides & Presentation**
 
 **Canva Slide Deck**:  
@@ -62,14 +56,12 @@ MoME is a cross-chain AI platform that automatically detects which blockchain(s)
 
 This deck details the problem space, architecture, chain integrations, user feedback flow, and a future roadmap.
 
----
-
 ## **Repository: Getting Started**
 
-**GitHub Repo**: [https://github.com/yourOrg/mome-multichain-parser](https://github.com/yourOrg/mome-multichain-parser)
+**GitHub Repo**: https://github.com/wanotaieng/multichain-tx-parser
 
 ```bash
-git clone https://github.com/yourOrg/mome-multichain-parser.git
+git clone https://github.com/wanotaieng/multichain-tx-parser.git
 cd mome-multichain-parser
 npm install
 npm run dev
