@@ -18,6 +18,7 @@
     "better-sqlite3": "^11.8.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dkg.js": "^8.0.6",
     "lucide-react": "^0.475.0",
     "next": "14.2.16",
     "openai": "^4.83.0",

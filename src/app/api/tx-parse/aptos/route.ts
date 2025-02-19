@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
-import { Aptos } from "@aptos-labs/ts-sdk";
+import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 
 const requiredEnvVars = ["ELYN_API_KEY", "ELYN_API_ENDPOINT"] as const;
 for (const envVar of requiredEnvVars) {
@@ -14,9 +14,8 @@ const openai = new OpenAI({
   baseURL: process.env.ELYN_API_ENDPOINT,
 });
 
-const aptos = new Aptos({
-  nodeUrl: "https://fullnode.mainnet.aptoslabs.com/v1",
-});
+const config = new AptosConfig({ network: Network.MAINNET });
+const aptos = new Aptos(config);
 
 interface ApiResponse {
   transaction?: any;
@@ -25,7 +24,16 @@ interface ApiResponse {
 }
 
 async function fetchAptosTransaction(hash: string) {
-  return aptos.restClient.transactionByHash(hash);
+  const config = new AptosConfig({ network: Network.MAINNET });
+  const aptos = new Aptos(config);
+
+  try {
+    const transaction = await aptos.getTransactionByHash({ transactionHash: hash });
+    return transaction;
+  } catch (error) {
+    console.error("Error fetching transaction:", error);
+    throw error;
+  }
 }
 
 async function analyzeTransaction(tx: any): Promise<string> {
