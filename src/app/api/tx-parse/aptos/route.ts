@@ -23,7 +23,7 @@ interface ApiResponse {
 
 async function fetchAptosTransaction(hash: string) {
   const response = await fetch(
-    `${APTOS_NODE_URL}/transactions/by_hash/${hash}`
+      `${APTOS_NODE_URL}/transactions/by_hash/${hash}`
   );
 
   if (!response.ok) {
@@ -62,7 +62,7 @@ Use clear, concise language and focus on the most important aspects of the Move 
       {
         role: "user",
         content: `Analyze this Aptos transaction in detail: ${JSON.stringify(
-          transaction
+            transaction
         )}`,
       },
     ],
@@ -85,8 +85,8 @@ export async function GET(request: Request) {
 
     if (!hash) {
       return NextResponse.json(
-        { error: "Transaction hash is required" },
-        { status: 400 }
+          { error: "Transaction hash is required" },
+          { status: 400 }
       );
     }
 
@@ -103,13 +103,13 @@ export async function GET(request: Request) {
     console.error("Error processing transaction:", error);
 
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "An unexpected error occurred while fetching the transaction";
+        error instanceof Error
+            ? error.message
+            : "An unexpected error occurred while fetching the transaction";
 
     return NextResponse.json(
-      { error: errorMessage },
-      { status: error instanceof Error ? 400 : 500 }
+        { error: errorMessage },
+        { status: error instanceof Error ? 400 : 500 }
     );
   }
 }
@@ -118,8 +118,8 @@ export async function POST(req: Request) {
   try {
     if (!req.body) {
       return NextResponse.json(
-        { error: "Request body is required" },
-        { status: 400 }
+          { error: "Request body is required" },
+          { status: 400 }
       );
     }
 
@@ -127,8 +127,8 @@ export async function POST(req: Request) {
 
     if (!transaction) {
       return NextResponse.json(
-        { error: "Transaction data is required" },
-        { status: 400 }
+          { error: "Transaction data is required" },
+          { status: 400 }
       );
     }
 
@@ -143,13 +143,13 @@ export async function POST(req: Request) {
     console.error("Error processing transaction:", error);
 
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "An unexpected error occurred while parsing the transaction";
+        error instanceof Error
+            ? error.message
+            : "An unexpected error occurred while parsing the transaction";
 
     return NextResponse.json(
-      { error: errorMessage },
-      { status: error instanceof Error ? 400 : 500 }
+        { error: errorMessage },
+        { status: error instanceof Error ? 400 : 500 }
     );
   }
 }
