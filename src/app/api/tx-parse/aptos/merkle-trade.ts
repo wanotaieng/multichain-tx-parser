@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { OpenAI } from "openai";
-import { Aptos } from "@aptos-labs/ts-sdk";
+import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 import { MerkleClient, MerkleClientConfig } from "@merkletrade/ts-sdk";
 import { HfInference } from "@huggingface/inference";
 import { QdrantClient } from "@qdrant/js-client-rest";
@@ -96,9 +96,19 @@ async function classifyChain(rawTx: any): Promise<string> {
 }
 
 async function fetchAptosTransaction(hash: string) {
-  const aptosClient = new Aptos({ nodeUrl: "https://fullnode.mainnet.aptoslabs.com/v1" });
-  return aptosClient.restClient.transactionByHash(hash);
-}
+    // Initialize the Aptos client with the desired network configuration
+    const config = new AptosConfig({ network: Network.MAINNET });
+    const aptos = new Aptos(config);
+  
+    try {
+      // Fetch the transaction details by hash
+      const transaction = await aptos.getTransactionByHash({ transactionHash: hash });
+      return transaction;
+    } catch (error) {
+      console.error("Error fetching transaction:", error);
+      throw error;
+    }
+  }
 
 async function retrieveDocs(query: string): Promise<string> {
   const embeddings = await hf.featureExtraction({
