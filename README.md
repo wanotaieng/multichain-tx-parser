@@ -1,9 +1,7 @@
 # **MultiChain Transaction Parser: Mixture of Multichain Experts (MoME)**
 
-## **Short Summary
+## Short Summary
 A unified AI-powered platform that intelligently parses and explains blockchain transactions across multiple networks, including Aptos, Ripple, and Polkadot.
-
----
 
 ## **Full Description**
 
