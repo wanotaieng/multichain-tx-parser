@@ -1,23 +1,30 @@
-# Aptos Transaction Parser
+# Multichain Transaction Parser
 
-An elegant and intuitive tool for parsing and understanding Aptos blockchain transactions with AI-powered explanations.
+A unified blockchain transaction parser with AI-powered explanations - supporting multiple chains including Aptos, Ripple, and Polkadot.
 
-![Aptos Transaction Parser Screenshot](./public/screenshot.png)
+![Multichain Transaction Parser Screenshot](./public/screenshot.png)
 
 ## Features
 
-- 🎯 **Dual Input Methods**
-  - Parse transactions using raw JSON
-  - Quick lookup using transaction hash
+- 🌐 **Multi-Chain Support**
+  - Aptos blockchain
+  - Ripple (XRP) network
+  - Polkadot network
+  - More chains coming soon
+- 🧠 **MOCE (Mixture of Chain Experts)**
+  - Intelligent chain detection
+  - Chain-specific transaction analysis
+  - Automatic format recognition
 - 🤖 **AI-Powered Explanations**
   - Clear, concise transaction summaries
+  - Chain-specific interpretation
   - Human-readable format
 - 🎨 **Modern UI/UX**
   - Clean and intuitive interface
   - Responsive design
   - Dark mode support
 - 🔗 **Seamless Integration**
-  - Direct links to Aptos Explorer
+  - Direct links to respective block explorers
   - Copy-paste friendly JSON viewer
 
 ## Tech Stack
@@ -35,13 +42,14 @@ An elegant and intuitive tool for parsing and understanding Aptos blockchain tra
 - Node.js 18.0 or later
 - yarn or npm
 - OpenAI API key
+- Subscan API key (for Polkadot support)
 
 ### Installation
 
 1. Clone the repository
 ```bash
-git clone https://github.com/pumpkinzomb/aptos-tx-parser.git
-cd aptos-tx-parser
+git clone https://github.com/pumpkinzomb/multichain-tx-parser.git
+cd multichain-tx-parser
 ```
 
 2. Install dependencies
@@ -60,6 +68,7 @@ Edit `.env.local` and add your configuration:
 ```
 ELYN_API_KEY=your_api_key_here
 ELYN_API_ENDPOINT=your_api_endpoint_here
+SUBSCAN_API_KEY=your_subscan_api_key_here
 ```
 
 4. Start the development server
@@ -73,16 +82,15 @@ Visit `http://localhost:3000` to see the application.
 
 ## Usage
 
-1. Choose your input method:
-   - **JSON Input**: Paste raw transaction JSON
+1. Input your transaction:
+   - **JSON Input**: Paste raw transaction JSON from any supported chain
    - **Hash Input**: Enter transaction hash
 
-2. Click "Parse Transaction" to analyze
-
-3. View the:
-   - Formatted transaction data
-   - AI-generated explanation
-   - Direct link to Aptos Explorer
+2. The system will automatically:
+   - Detect the blockchain network
+   - Parse the transaction
+   - Generate an AI-powered explanation
+   - Provide a link to the appropriate block explorer
 
 ## Contributing
 
@@ -94,19 +102,15 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgments
 
 - Built by [zombcat](https://github.com/pumpkinzomb)
 - Powered by OpenAI
 - UI components from [shadcn/ui](https://ui.shadcn.com/)
-- Built for the Aptos community
+- Special thanks to the blockchain communities
 
 ## Contact
 
 zombcat - [@zombcat](https://twitter.com/zombcat)
 
-Project Link: [https://github.com/pumpkinzomb/aptos-tx-parser](https://github.com/pumpkinzomb/aptos-tx-parser)
+Project Link: [https://github.com/pumpkinzomb/multichain-tx-parser](https://github.com/pumpkinzomb/multichain-tx-parser)
