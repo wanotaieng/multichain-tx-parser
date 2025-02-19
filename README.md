@@ -79,7 +79,7 @@ TBD
 | Screenshot                                          | Description                                                                        |
 |-----------------------------------------------------|------------------------------------------------------------------------------------|
 | ![Transaction Parser Screenshot](./public/screenshot.png) | **Figure 1**: Front-end interface where user pastes transaction data.              |
-| ![Transaction Parser Screenshot2](./public/routing.001.png) | **Figure 2**: Architecture              |
+| ![Transaction Parser Screenshot2](./public/architecture.png) | **Figure 2**: Architecture              |
 
 ---
 
