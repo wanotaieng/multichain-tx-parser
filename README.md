@@ -1,64 +1,89 @@
-# **MultiChain Transaction Parser: Mixture of Multichain Experts (MoME)**
+# MultiChain Transaction Analyzer: Mixture of Multichain Experts (MoME)
 
 ## Short Summary
-A unified AI-powered platform that intelligently parses and explains blockchain transactions across multiple networks, including Aptos, Ripple, and Polkadot.
+MoME is an AI-powered platform that automatically parses, verifies, and explains blockchain transactions across multiple networks—Aptos, Ripple, Polkadot, and OriginTrail. By providing clear, human-readable transaction summaries and visual diagrams, our solution ensures transparency and trust, preventing fraud and enabling experts and users alike to verify on-chain data with confidence.
 
-## **Full Description**
+## Full Description
 
-**Problem & Motivation**  
-In the rapidly evolving blockchain landscape, each network (Aptos, Ripple, Polkadot, etc.) has unique transaction structures and formats. Developers and end-users often struggle to parse on-chain data without specialized tooling or deep chain-specific expertise. This complexity hinders cross-chain collaboration and creates steep learning curves.
+![Architecture Diagram](./public/architecture.png)
 
-**Solution: Mixture of Multichain Experts (MoME)**  
-MoME is a cross-chain AI platform that automatically detects which blockchain(s) a transaction belongs to, fetches relevant data from a vector database (Qdrant), then hands the transaction to a specialized “Expert” for that chain. Finally, an SLM (GPT-4o-mini) produces a **plain-English** summary and optional **Mermaid** diagram. By combining a **Routing Network** (ModernBERT) with **chain-specific Experts** and user feedback loops, MoME offers accurate, human-readable transaction explanations with minimal manual intervention.
+### Problem & Motivation
+Blockchain transactions are the lifeblood of decentralized systems. However, due to the diverse formats and proprietary structures of each blockchain, it is challenging to clearly verify and understand transaction details. Without clear, verifiable transaction data, even SOTA (state-of-the-art) LLM models like DeepSeek R1 or GPT-o1 may struggle to accurately detect fraudulent activity or potential scams, leaving users vulnerable to deception. Our platform addresses this critical need by ensuring that every transaction is parsed and presented transparently, fostering trust and accountability in the blockchain ecosystem. We would like to solve this problem by augmenting the contexts around the transaction modules.
 
-## **Technical Description**
+### The MoME Solution
+MoME employs a multi-step process to deliver a unified, cross-chain transaction analyzer:
+- **Intelligent Routing & Classification:** Using state-of-the-art embedding models and a vector database (Qdrant), MoME automatically classifies the blockchain of a given transaction (Aptos, Ripple, Polkadot, or OriginTrail) and retrieves relevant contextual documents.
+- **Chain-Specific Analysis:** Specialized models and prompts process raw transaction data from each network, generating a clear, plain-English summary along with a visual Mermaid diagram to illustrate the transaction flow.
+- **Seamless Integration:** Leveraging the Aptos SDK, Merkle Trade SDK, and other chain-specific tools, our platform not only decodes transactions but also supports autonomous trading operations and on-chain verification.
+- **Decentralized Transparency:** By ensuring that every transaction can be transparently verified on-chain, MoME helps prevent fraud and builds user confidence in blockchain interactions.
 
-1. **Routing Network**  
-   - **ModernBERT (~500M params)** classifies the raw transaction input to identify Aptos, Ripple, or Polkadot (potentially more chains in the future).  
-   - Maintains high routing accuracy by continuously fine-tuning on new transaction formats and user feedback.  
+### Technical Architecture
 
-2. **Qdrant Vector Database**  
-   - Stores both **historical transaction data** and **user feedback** (thumbs up/down).  
-   - Upon each query, the relevant chain Expert retrieves context to mitigate hallucinations and incorporate best practices from prior user sessions.  
+1. **Routing & Classification**
+   - **ModernBERT & HF Inference:** Analyze raw transaction data to determine the appropriate blockchain (Aptos, Ripple, Polkadot, or OriginTrail) using advanced embedding models.
+   - **Qdrant Integration:** Retrieve historical transaction context and documentation to enrich analysis and mitigate hallucinations.
 
-3. **Chain Experts**  
-   - **Specialized Models**: Each expert is “trained” or configured to interpret the chain’s custom transaction fields.  
-   - **Augmentation**: Combines raw input with Qdrant context to form a comprehensive prompt for the LLM.  
+2. **Chain-Specific Transaction Parsing**
+   - **Aptos:** Utilize the Aptos SDK to read and verify Move-based transactions. Integration with the Merkle Trade SDK enables the creation of autonomous trading agents.
+   - **Ripple:** Decode and analyze transactions on the XRP Ledger to ensure accurate verification.
+   - **Polkadot:** Decode extrinsics and visualize liquidity pools on Polkadot’s AssetHub, supporting advanced DeFi analytics.
+   - **OriginTrail:** Although not the primary focus, our solution supports the OriginTrail track—leveraging the decentralized knowledge graph to ensure data integrity and enable cross-chain asset management.
 
-4. **Small Language Model (GPT-4o-mini)**  
-   - Generates a **human-readable explanation** of the transaction.  
-   - Optionally produces a **Mermaid** diagram for visual clarity.  
+3. **LLM-Powered Summarization**
+   - **OpenAI small LLM (mini-sized 4o-mini) :** Generate concise, human-readable explanations of transactions and produce accompanying Mermaid diagrams for visualization, without heavily using reasoning model like o1.
 
-5. **Infrastructure**  
-   - **Aptos**: Move-based transaction reading and mainnet/testnet integration.  
-   - **Ripple**: XRPL parsing (potentially RLUSD-based stablecoin or bridging logic).  
-   - **Polkadot**: polkadot.js-based extrinsic decoding, especially for DeFi or asset hub use cases.
+4. **Transparency & Verification**
+   - By ensuring that every transaction is clearly presented and verifiable on-chain, MoME empowers users to confidently detect anomalies and fraudulent behavior.
 
-## **Roadmap**
+### Eligibility & Track Application
 
-### **Done**  
-- **Routing Network**: Developed a query router (ModernBERT) that classifies incoming transactions by blockchain.  
-- **Expert Model**: Implemented chain-specific experts that expand transaction context, reducing hallucinations.  
-- **Re-Augmentation**: Integrated historical data and user feedback to refine transaction explanations.  
-- **SLM Query**: Developed a pipeline that calls GPT-4o-mini to decode raw transaction data into human-readable summaries.  
-- **Finetuned ModernBERT**: Improved routing accuracy to reliably direct queries to the appropriate chain expert.
+Our project is eligible and uniquely positioned to compete in **all four tracks**:
 
-### **To Do**  
-- **Open Embedding Model**: Publish the embedding model used for Qdrant, including training script and evaluation metrics.
-- **Add User Feedbacks**: Use user thumbs-up/down as reward signals to adapt the routing or chain experts over time.
-- **Advanced Mermaid Output**: Generate richer diagrams, covering multi-step contract calls or cross-chain bridging flows.  
-- **Scalability Upgrades**: Optimize vector database queries and expert models to handle higher transaction volumes in real-time.
+1. **Aptos:**  
+   - **Why:** We use the Aptos SDK for robust transaction parsing and integrate the Merkle Trade SDK to enable autonomous trading operations on Aptos.  
+   - **Impact:** Enhances on-chain transparency and provides a verifiable method to read and execute transactions, ensuring user trust.
 
-## **Slides & Presentation**
+2. **Ripple:**  
+   - **Why:** Our solution extends to the XRP Ledger, offering specialized decoding and verification that highlights clear, accessible transaction summaries.  
+   - **Impact:** Facilitates trust by making Ripple transactions transparent and easily verifiable, reducing the risk of fraud.
 
-**Canva Slide Deck**:  
-[MoME Presentation](https://www.canva.com/yourMoMEProjectDeckLink)
+3. **Polkadot:**  
+   - **Why:** We provide visualization for liquidity pools on Polkadot’s AssetHub and decode complex extrinsics to offer comprehensive insights into DeFi operations.  
+   - **Impact:** Enables better understanding of decentralized liquidity dynamics and empowers users to monitor asset flows across the Polkadot ecosystem.
 
-This deck details the problem space, architecture, chain integrations, user feedback flow, and a future roadmap.
+4. **OriginTrail:**  
+   - **Why:** Although our primary focus is on transaction verification, our platform supports integration with the OriginTrail ecosystem to store, query, and manage decentralized knowledge assets.  
+   - **Impact:** Ensures that all on-chain data remains verifiable and transparent, fostering an environment of trust and data integrity within decentralized networks.
 
-## **Repository: Getting Started**
+### Roadmap
 
-**GitHub Repo**: https://github.com/wanotaieng/multichain-tx-parser
+- **Completed:**
+  - Developed a query router that can handle input to determine which blockchain(s) need to be involved.
+  - Developed expert model and expands the transaction context to prevent hallucinations.
+  - Developed the system re-augments the transaction data based on historical data and user feedback.
+  - Developed the system queries the SLM that decode the transaction data and generate human-readable explanations.
+  - Finetuned ModernBERT to route the query to the appropriate blockchain expert based on the input.
+
+- **Upcoming:**
+  - Expand the expert models by training them on additional blockchain networks.
+  - Open-source the benchmark data of multichain transaction parsing accuracy.
+  - Refine the model further based on a broader dataset, continuously improving the routing of broader chains.
+  - Expand the mermaid output capabilities to generate more detailed visual representations across multiple chains.
+  - Improve the scalability to handle larger transaction volumes faster, including the optimization of vector databases and expert model training processes.
+
+### Demo & Repository
+
+**Demo Video:**  
+TBD
+
+**Screenshots:**
+
+| Screenshot                                              | Description                                                                    |
+|---------------------------------------------------------|--------------------------------------------------------------------------------|
+| ![Front-end Interface](./public/screenshot.png)         | Front-end interface where users input transaction data for analysis.           |
+
+**GitHub Repository:**  
+[MultiChain Transaction Analyzer Repo](https://github.com/wanotaieng/multichain-tx-parser)
 
 ```bash
 git clone https://github.com/wanotaieng/multichain-tx-parser.git
@@ -67,54 +92,27 @@ npm install
 npm run dev
 ```
 
----
+## Benchmark
+We conducted an initial benchmark using 50 test datasets and observed a significant improvement in accuracy. MoME, powered by GPT-4o-mini, outperforms SOTA models like GPT-o1 and Claude-3.5-sonnet. Although GPT-4o-mini alone has lower accuracy, our approach enhances its performance by integrating transaction context and specialized processing.
 
-## **Demo Video**
-TBD
+![Benchmark](./public/accuracy.png)
 
----
+### Eligibility & Why We Are Eligible
 
-## **Screenshots**
+Our solution directly addresses the core issue: **blockchain transactions must be transparent and verifiable to prevent fraud and scams.** Without clear transaction data, users and experts alike may fall victim to deceptive practices. MoME’s AI-powered analysis makes transactions understandable at a glance, ensuring that every on-chain operation is both trustworthy and auditable.
 
-| Screenshot                                          | Description                                                                        |
-|-----------------------------------------------------|------------------------------------------------------------------------------------|
-| ![Transaction Parser Screenshot](./public/screenshot.png) | **Figure 1**: Front-end interface where user pastes transaction data.              |
-| ![Transaction Parser Screenshot2](./public/architecture.png) | **Figure 2**: Architecture              |
+- **Aptos:** By leveraging the Aptos SDK and Merkle Trade SDK, our platform guarantees robust, real-time transaction verification and automated trading capabilities.
+- **Ripple:** Our clear parsing of XRPL transactions empowers users to easily verify and trust Ripple network operations.
+- **Polkadot:** Our visualization of liquidity pools on AssetHub enables transparent monitoring of decentralized finance activities.
+- **OriginTrail:** Our system integrates seamlessly with the OriginTrail ecosystem, ensuring decentralized storage and retrieval of transaction analyses for additional verifiability.
 
----
+### Future Potential
 
-## **How We Satisfy Hackathon Requirements**
+- **Expand Cross-Chain Coverage:** Incorporate additional blockchains like Ethereum, Solana, or Cosmos.
+- **Advanced Trading Agents:** Further develop autonomous trading agents using the Merkle Trade SDK.
+- **Enhanced Visualization:** Create detailed, interactive dashboards for tracking liquidity and transaction flows.
+- **Community Integration:** Foster a collaborative ecosystem where user feedback continuously refines transaction analysis and blockchain verification.
 
-1. **Use of Sponsor Tech**:  
-   - Aptos transaction parsing and on-chain verification.  
-   - Optional Polkadot extrinsic decoding or Ripple RLUSD stablecoin flows.  
-2. **Open Source**:  
-   - Entire codebase publicly available on GitHub (MIT license).  
-3. **Short Summary & Full Description**:  
-   - Provided at the start of this README.  
-4. **Technical Description**:  
-   - Detailed coverage of the pipeline, from ModernBERT routing to GPT-4o-mini inference.  
-5. **Canva Slides**:  
-   - Linked above.  
-6. **Clear README**:  
-   - Demo video, screenshots, and Loom walkthrough included.  
+### License & Contributions
 
----
-
-## **Future Potential**
-
-- **Integrate Merkle Trade SDK**: Build AI trading agents on Aptos for leveraged positions.  
-- **DeFi Tools on Polkadot**: Visualize multi-asset liquidity pools on Polkadot’s AssetHub.  
-- **Cross-Chain Expansion**: Add Ethereum, Solana, or Cosmos experts to unify more ecosystems.  
-- **Reinforcement Learning**: Use user thumbs-up/down as reward signals to adapt the routing or chain experts over time.
-
----
-
-## **License & Contributions**
-
-Licensed under the **MIT License**. We appreciate community feedback and pull requests. 
-
-1. **Contribution**: Submit PRs for new chain experts, improved LLM prompts, or specialized retrieval plugins.  
-2. **Contact**: Post issues on GitHub or reach us via the hackathon’s Discord/Telegram channels.
-
-Thank you for exploring **Mixture of Multichain Experts (MoME)**—a next-generation solution for cross-chain transaction decoding, using state-of-the-art AI and user feedback to unify and simplify blockchain interactions. We look forward to scaling MoME to more chains and more sophisticated DeFi use cases!
+This project is licensed under the **MIT License**. We welcome contributions from the community. Please submit pull requests or open issues on GitHub. For questions or discussions, join our hackathon Discord/Telegram channels.
