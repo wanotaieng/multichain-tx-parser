@@ -36,7 +36,7 @@ async function fetchAptosTransaction(hash: string) {
 
 async function analyzeTransaction(transaction: any): Promise<string> {
   const completion = await openai.chat.completions.create({
-    model: "elyn/2.0-flash-exp",
+    model: "elyn/2.0-flash",
     messages: [
       {
         role: "system",

@@ -14,13 +14,15 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Aptos Transaction Parser",
+  title: "Blockchain Transaction Parser",
   description:
-    "Easily parse and understand Aptos blockchain transactions with AI-powered explanations. A tool by zombcat.",
+    "AI-powered blockchain transaction parser for Aptos, Ripple, and Polkadot networks. A tool by zombcat.",
   keywords: [
-    "Aptos",
     "blockchain",
     "transaction parser",
+    "Aptos",
+    "Ripple",
+    "Polkadot",
     "crypto",
     "blockchain explorer",
     "web3",
@@ -39,17 +41,17 @@ export const metadata: Metadata = {
     follow: true,
   },
   openGraph: {
-    title: "Aptos Transaction Parser",
+    title: "Blockchain Transaction Parser",
     description:
-      "AI-powered Aptos transaction parser for better blockchain understanding",
+      "AI-powered blockchain transaction parser for multiple networks",
     type: "website",
-    siteName: "Aptos Transaction Parser",
+    siteName: "Blockchain Transaction Parser",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aptos Transaction Parser",
+    title: "Blockchain Transaction Parser",
     description:
-      "AI-powered Aptos transaction parser for better blockchain understanding",
+      "AI-powered blockchain transaction parser for multiple networks",
     creator: "@zombcat",
   },
   viewport: {
@@ -61,7 +63,7 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   category: "Technology",
-  applicationName: "Aptos Transaction Parser",
+  applicationName: "Blockchain Transaction Parser",
 };
 
 export default function RootLayout({
