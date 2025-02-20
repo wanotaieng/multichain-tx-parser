@@ -1,4 +1,4 @@
-# MultiChain Transaction Analyzer: Mixture of Multichain Experts (MoME)
+# Multi-Chain Transaction Analyzer: Mixture of Multichain Experts (MoME)
 
 ## Short Summary
 MoME is an AI-powered platform that automatically parses, verifies, and explains blockchain transactions across multiple networks—Aptos, Ripple, Polkadot, and OriginTrail. By providing clear, human-readable transaction summaries and visual diagrams, our solution ensures transparency and trust, preventing fraud and enabling experts and users alike to verify on-chain data with confidence.
@@ -9,6 +9,11 @@ MoME is an AI-powered platform that automatically parses, verifies, and explains
 
 ### Problem & Motivation
 Blockchain transactions are the lifeblood of decentralized systems. However, due to the diverse formats and proprietary structures of each blockchain, it is challenging to clearly verify and understand transaction details. Without clear, verifiable transaction data, even SOTA (state-of-the-art) LLM models like DeepSeek R1 or GPT-o1 may struggle to accurately detect fraudulent activity or potential scams, leaving users vulnerable to deception. Our platform addresses this critical need by ensuring that every transaction is parsed and presented transparently, fostering trust and accountability in the blockchain ecosystem. We would like to solve this problem by augmenting the contexts around the transaction modules.
+
+### What Is Mixture of Experts (MoE) in LLM?
+- Mixture of Experts (MoE) is a neural network architecture that consists of multiple expert networks (or experts), each specializing in a particular type of input or task.
+- A gating network (or router) determines which expert(s) should be activated for a given input, effectively splitting the workload among the different experts. When an input arrives, the router scores each expert and applies a weighted combination of the experts’ outputs (often only one or a few experts are chosen).
+- GPT-4 (developed by OpenAI) is widely believed to include MoE techniques to balance performance and efficiency. Even Anthropic explored sparse gating and MoE-like techniques to manage extremely large parameter counts without incurring prohibitive computational costs when serving Claude 3.5 sonnet models via API.
 
 ### The MoME Solution
 MoME employs a multi-step process to deliver a unified, cross-chain transaction analyzer:
