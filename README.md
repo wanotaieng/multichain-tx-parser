@@ -55,6 +55,10 @@ Our project is eligible and uniquely positioned to compete in **all four tracks*
    - **Why:** Although our primary focus is on transaction verification, our platform supports integration with the OriginTrail ecosystem to store, query, and manage decentralized knowledge assets.  
    - **Impact:** Ensures that all on-chain data remains verifiable and transparent, fostering an environment of trust and data integrity within decentralized networks.
 
+5. **Crust Network**:
+    - **Why:** We leverage Crust’s decentralized storage capabilities to store transaction data, user feedback, and generated analytics (like mermaid diagrams or historical references) in a tamper-proof and censorship-resistant manner.
+    - **Impact:** Provides an immutable and reliable repository for all data, bridging both Web2 and Web3 infrastructures. This ensures users can verify data provenance while benefiting from decentralized storage for long-term archival, security, and trust.
+
 ### Roadmap
 
 - **Completed:**
