@@ -1,6 +1,9 @@
 # Multi-Chain Transaction Analyzer: Mixture of Multichain Experts (MoME)
 
 ## Short Summary
+YouTube: https://www.youtube.com/embed/xEISgC4vJJQ
+URL: https://multichain-tx-parser.vercel.app
+
 MoME is an AI-powered platform that automatically parses, verifies, and explains blockchain transactions across multiple networks—Aptos, Ripple, Polkadot, and OriginTrail. By providing clear, human-readable transaction summaries and visual diagrams, our solution ensures transparency and trust, preventing fraud and enabling experts and users alike to verify on-chain data with confidence.
 
 ## Full Description
