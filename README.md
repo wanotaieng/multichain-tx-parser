@@ -1,11 +1,14 @@
 # Crypto AI Agents needs better model architecture: Mixture of Multichain Experts (MoME)
 
-## Multi-Chain Transaction Analyzer Short Summary
-YouTube: https://www.youtube.com/embed/xEISgC4vJJQ
+## Key Links
+* YouTube: https://www.youtube.com/embed/xEISgC4vJJQ
+* Multi-Chain Transaction Analyzer URL: https://multichain-tx-parser.vercel.app
+* Slide Deck: https://drive.google.com/file/d/1FP7iix0iy2GOPQVIhoMnxfthbvZLKlPy/view?usp=sharing
 
-Multi-Chain Transaction Analyzer URL: https://multichain-tx-parser.vercel.app
-
+## Short Summary
 MoME is an AI-powered platform that automatically parses, verifies, and explains blockchain transactions across multiple networks—Aptos, Ripple, Polkadot, and OriginTrail. By providing clear, human-readable transaction summaries and visual diagrams, our solution ensures transparency and trust, preventing fraud and enabling experts and users alike to verify on-chain data with confidence.
+
+Multi-Chain Transaction Analyzer is the first product that we apply the MoME architecture.
 
 ## Full Description
 
