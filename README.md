@@ -83,7 +83,7 @@ Our project is eligible and uniquely positioned to compete in **all four tracks*
 ### Demo & Repository
 
 **Demo Video:**  
-TBD
+https://youtu.be/xEISgC4vJJQ
 
 **Screenshots:**
 #### Front-end interface where users input transaction data for analysis.
