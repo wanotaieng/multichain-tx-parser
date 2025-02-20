@@ -13,7 +13,7 @@ Blockchain transactions are the lifeblood of decentralized systems. However, due
 ### What Is Mixture of Experts (MoE) in LLM?
 - Mixture of Experts (MoE) is a neural network architecture that consists of multiple expert networks (or experts), each specializing in a particular type of input or task.
 - A gating network (or router) determines which expert(s) should be activated for a given input, effectively splitting the workload among the different experts. When an input arrives, the router scores each expert and applies a weighted combination of the experts’ outputs (often only one or a few experts are chosen).
-- GPT-4 (developed by OpenAI) is widely believed to include MoE techniques to balance performance and efficiency. Even Anthropic explored sparse gating and MoE-like techniques to manage extremely large parameter counts without incurring prohibitive computational costs when serving Claude 3.5 sonnet models via API.
+- The GPT-4 series is widely believed to include MoE techniques to balance performance and efficiency. Even Anthropic explored sparse gating and MoE-like techniques to manage extremely large parameter counts without incurring prohibitive computational costs when serving Claude 3.5 sonnet models via API.
 
 ### The MoME Solution
 MoME employs a multi-step process to deliver a unified, cross-chain transaction analyzer:
@@ -86,10 +86,14 @@ Our project is eligible and uniquely positioned to compete in **all four tracks*
 TBD
 
 **Screenshots:**
+#### Front-end interface where users input transaction data for analysis.
+![Front-end Interface](./public/screenshot.png)
 
-| Screenshot                                              | Description                                                                    |
-|---------------------------------------------------------|--------------------------------------------------------------------------------|
-| ![Front-end Interface](./public/screenshot.png)         | Front-end interface where users input transaction data for analysis.           |
+#### The example interface for [Merkle Trade (Aptos SDK)](https://aptoscan.com/transaction/2386736279)
+![Front-end Interface_2](./public/aptos.png)
+
+#### The example interface for [Polkadot](https://polkadot.subscan.io/extrinsic/0x3a01b91db684326e23a67bd12842f73f314fb00c3b5c130c70ba63ebfffc8059)
+![Front-end Interface_3](./public/polkadot.png)
 
 **GitHub Repository:**  
 [MultiChain Transaction Analyzer Repo](https://github.com/wanotaieng/multichain-tx-parser)
@@ -100,6 +104,15 @@ cd mome-multichain-parser
 npm install
 npm run dev
 ```
+
+**Hugging Face (Model will be open-sourced)**
+* [momeaicrypto/MoME-A2.7B](https://huggingface.co/momeaicrypto/MoME-A2.7B)
+
+![HuggingFace Model](./public/mome_model.png)
+
+* [momeaicrypto/ModernBERT-base-MoME-v0](https://huggingface.co/momeaicrypto/ModernBERT-base-MoME-v0)
+
+![HuggingFace Model_2](./public/modernbert.png)
 
 ## Benchmark
 We conducted an initial benchmark using 50 test datasets and observed a significant improvement in accuracy. MoME, powered by GPT-4o-mini, outperforms SOTA models like GPT-o1 and Claude-3.5-sonnet. Although GPT-4o-mini alone has lower accuracy, our approach enhances its performance by integrating transaction context and specialized processing.
