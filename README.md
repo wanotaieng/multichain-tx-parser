@@ -3,6 +3,7 @@
 ## Key Links
 * YouTube: https://www.youtube.com/embed/xEISgC4vJJQ
 * Multi-Chain Transaction Analyzer URL: https://multichain-tx-parser.vercel.app
+* Polkadot URL: https://multichain-tx-parser.vercel.app/polkadot
 * Slide Deck: https://drive.google.com/file/d/1FP7iix0iy2GOPQVIhoMnxfthbvZLKlPy/view?usp=sharing
 
 ## Short Summary
