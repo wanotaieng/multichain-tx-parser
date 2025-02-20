@@ -85,14 +85,6 @@ Our project is eligible and uniquely positioned to compete in **all four tracks*
 **Demo Video:**  
 * YouTube: [https://youtu.be/xEISgC4vJJQ](https://www.youtube.com/embed/xEISgC4vJJQ)
 
-<iframe width="560" height="315"
-    src="https://www.youtube.com/embed/xEISgC4vJJQ"
-    title="YouTube video player"
-    frameborder="0"
-    allowfullscreen>
-</iframe>
-
-
 **Screenshots:**
 #### Front-end interface where users input transaction data for analysis.
 ![Front-end Interface](./public/screenshot.png)
