@@ -83,7 +83,7 @@ Our project is eligible and uniquely positioned to compete in **all four tracks*
 ### Demo & Repository
 
 **Demo Video:**  
-https://youtu.be/xEISgC4vJJQ
+* YouTube: [https://youtu.be/xEISgC4vJJQ](https://www.youtube.com/embed/xEISgC4vJJQ)
 
 <iframe width="560" height="315"
     src="https://www.youtube.com/embed/xEISgC4vJJQ"
